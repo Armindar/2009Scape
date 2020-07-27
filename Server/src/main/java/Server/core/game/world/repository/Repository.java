@@ -172,12 +172,17 @@ public final class Repository {
 			return null;
 		}
 		Player player = PLAYER_NAMES.get(name.toLowerCase().replaceAll(" ", "_"));
+		if (player == null) {
+			player = PLAYER_NAMES.get(name.toLowerCase().replaceAll("_", " "));
+		}
 		if (player == null && load) {
 			PlayerDetails details = PlayerDetails.getDetails(name);
 			if (details == null) {
 				return null;
 			}
+
 			player = new Player(details);
+			player.setActive(true);
 			PlayerParser.parse(player);
 		}
 		return player;

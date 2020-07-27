@@ -10,7 +10,6 @@ import core.net.NioReactor;
 import core.net.amsc.WorldCommunicator;
 import core.tools.TimeStamp;
 import core.tools.backup.AutoBackup;
-import org.runite.Configurations;
 import plugin.ge.GEAutoStock;
 
 import java.io.File;
@@ -20,7 +19,7 @@ import java.net.BindException;
  * The main class, for those that are unable to read the class' name.
  * @author Emperor
  * @author Vexia
- * 
+ *
  */
 public final class Server {
 

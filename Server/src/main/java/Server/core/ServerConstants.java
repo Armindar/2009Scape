@@ -10,10 +10,10 @@ import java.io.File;
  * A class holding constants of the server.
  * @author Emperor
  * @author Vexia
- * 
+ *
  */
 public final class ServerConstants {
-	
+
 	/**
 	 * The cache path.
 	 */
@@ -23,7 +23,7 @@ public final class ServerConstants {
 	 * The store path.
 	 */
 	public static final String STORE_PATH = "data/store/";
-	
+
 	/**
 	 * The player account path.
 	 */
@@ -40,17 +40,17 @@ public final class ServerConstants {
 	 * The maximum amount of NPCs.
 	 */
 	public static final int MAX_NPCS = (1 << 15) - 1;
-	
+
 	/**
 	 * The start location for a fresh account.
 	 */
 	public static final Location START_LOCATION = Location.create(3094, 3107, 0);
-	
+
 	/**
 	 * The main home teleport location.
 	 */
 	public static final Location HOME_LOCATION = Location.create(3222, 3218, 0);
-	
+
 	/**
 	 * The teleport destinations.
 	 */
@@ -84,7 +84,7 @@ public final class ServerConstants {
 			{ Location.create(3272, 3687, 0), "clan wars", "clw" },
 			{ Location.create(3090, 3957, 0), "mage arena", "mage", "magearena", "arena" },
 			{ Location.create(3069, 10257, 0), "king black dragon", "kbd" },
-			{ Location.create(3359, 3416, 0), "digsite" }, 
+			{ Location.create(3359, 3416, 0), "digsite" },
 			{ Location.create(3488, 3489, 0), "canifis" },
 			{ Location.create(3428, 3526, 0), "slayer tower", "slayer" },
 			{ Location.create(3502, 9483, 2), "kalphite queen", "kq", "kalphite hive", "kalphite" },
@@ -98,7 +98,7 @@ public final class ServerConstants {
 			{ Location.create(3169, 3034, 0), "bedabin" },
 			{ Location.create(3565, 3289, 0), "barrows" },
 		};
-	
+
 	/**
 	 * The teleport destinations, intended for Grandpa Jack.
 	 */
@@ -130,7 +130,7 @@ public final class ServerConstants {
 			{ Location.create(3180, 3684, 0), "bounty hunter", "bh" },
 			{ Location.create(3272, 3687, 0), "clan wars", "clw" },
 			{ Location.create(3090, 3957, 0), "mage arena", "mage", "magearena", "arena" },
-			{ Location.create(3359, 3416, 0), "digsite" }, 
+			{ Location.create(3359, 3416, 0), "digsite" },
 			{ Location.create(3488, 3489, 0), "canifis" },
 			{ Location.create(3428, 3526, 0), "slayer tower", "slayer" },
 			{ Location.create(3233, 2913, 0), "pyramid" },
@@ -143,12 +143,12 @@ public final class ServerConstants {
 			{ Location.create(3169, 3034, 0), "bedabin" },
 			{ Location.create(3565, 3311, 0), "barrows" },
 		};
-	
+
 	/**
 	 * The string of donation messages displayed on an interface.
 	 */
 	public static final String[] MESSAGES = new String[] { "Welcome!" };
-	
+
 	public static final String[] DATABASE_NAMES = {
 			"server",
 			"global",
@@ -158,14 +158,14 @@ public final class ServerConstants {
 			new Database(SQLManager.SQL_SERVER_ADDRESS, DATABASE_NAMES[0], (SQLManager.LOCAL ? "root" : "username"), (SQLManager.LOCAL ? "" : "password")),
 			new Database(SQLManager.SQL_SERVER_ADDRESS, DATABASE_NAMES[1], (SQLManager.LOCAL ? "root" : "username"), (SQLManager.LOCAL ? "" : "password"))
 	};
-	
+
 	/**
 	 * If MySQL is enabled.
 	 */
 	public static boolean MYSQL = true;
 
 	public static boolean VALIDATED = false;
-	
+
 	/**
 	 * Constructs a new {@Code ServerConstants} {@Code Object}
 	 */
@@ -174,8 +174,8 @@ public final class ServerConstants {
 		 * empty.
 		 */
 	}
-	
+
 	public static final Boolean NEW_PLAYER_DEFAULT_CLAN = true;
-	public static final String SERVER_NAME = "2009Scape";
-	
+	public static final String SERVER_NAME = "Wonderland";
+
 }
