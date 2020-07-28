@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <database>
-  <offsetUID>1</offsetUID>
+  <offer>
+    <uid>1</uid>
+    <itemId>1623</itemId>
+    <sale>true</sale>
+    <amount>1</amount>
+    <completedAmount>1</completedAmount>
+    <offeredValue>23</offeredValue>
+    <timeStamp>1595867822616</timeStamp>
+    <offerState>6</offerState>
+    <totalCoinExchange>23</totalCoinExchange>
+    <playerUID>-937948879</playerUID>
+  </offer>
+  <offer>
+    <uid>2</uid>
+    <itemId>1623</itemId>
+    <sale>false</sale>
+    <amount>1</amount>
+    <completedAmount>1</completedAmount>
+    <offeredValue>25</offeredValue>
+    <timeStamp>1595867835815</timeStamp>
+    <offerState>6</offerState>
+    <totalCoinExchange>23</totalCoinExchange>
+    <playerUID>-937948879</playerUID>
+  </offer>
+  <offsetUID>3</offsetUID>
 </database>
