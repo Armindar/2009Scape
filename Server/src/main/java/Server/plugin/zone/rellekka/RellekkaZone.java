@@ -44,7 +44,7 @@ public final class RellekkaZone extends MapZone implements Plugin<Object> {
 		ZoneBuilder.configure(this);
 		PluginManager.definePlugin(new SailorDialogue());
 		PluginManager.definePlugin(new JarvaldDialogue());
-		PluginManager.definePlugin(new RellekaOptionHandler(), new MariaGunnarsDialogue());
+		PluginManager.definePlugins(new RellekaOptionHandler(), new MariaGunnarsDialogue());
 		PluginManager.definePlugin(new OptionHandler() {
 
 			@Override
@@ -97,9 +97,6 @@ public final class RellekkaZone extends MapZone implements Plugin<Object> {
 				return true;
 			case 100:
 				player.getDialogueInterpreter().sendDialogue("You try to open the trapdoor but it won't budge! It looks like the", "trapdoor can only be opened from the other side.");
-				return true;
-			case 4158:
-				player.getDialogueInterpreter().sendDialogues(1283, null, "Hey! Outerlander! Do you normally just barge into", "someones home and wander around as you please?");
 				return true;
 			case 2435:
 			case 2436:

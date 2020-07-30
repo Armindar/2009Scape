@@ -2,11 +2,6 @@ package org.runite;
 
 import org.runite.jagex.GameShell;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 /**
  * Handles the launching of our Game Client.
  * @author Keldagrim Development Team

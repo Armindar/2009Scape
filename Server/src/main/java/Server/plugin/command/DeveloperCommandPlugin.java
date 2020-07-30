@@ -8,19 +8,13 @@ import core.game.container.Container;
 import core.game.container.impl.EquipmentContainer;
 import core.game.content.eco.EconomyManagement;
 import core.game.content.global.shop.Shop;
-import plugin.tutorial.TutorialSession;
 import core.game.content.holiday.HolidayItem;
 import core.game.content.holiday.ItemLimitation;
-import plugin.skill.Skills;
-import plugin.skill.smithing.smelting.Bar;
-import plugin.skill.construction.HouseLocation;
-import plugin.skill.summoning.pet.Pets;
 import core.game.node.entity.combat.ImpactHandler.HitsplatType;
 import core.game.node.entity.npc.NPC;
 import core.game.node.entity.npc.drop.DropTables;
 import core.game.node.entity.npc.drop.RareDropTable;
 import core.game.node.entity.player.Player;
-import plugin.ai.resource.ResourceAIPManager;
 import core.game.node.entity.player.info.PlayerDetails;
 import core.game.node.entity.player.info.login.PlayerParser;
 import core.game.node.entity.player.link.IronmanMode;
@@ -33,8 +27,6 @@ import core.game.node.object.GameObject;
 import core.game.system.command.CommandPlugin;
 import core.game.system.command.CommandSet;
 import core.game.system.mysql.SQLManager;
-import core.game.system.mysql.impl.ItemConfigSQLHandler;
-import core.game.system.mysql.impl.NPCDropSQLHandler;
 import core.game.system.script.ScriptManager;
 import core.game.system.task.Pulse;
 import core.game.world.GameWorld;
@@ -52,14 +44,22 @@ import core.plugin.PluginManager;
 import core.tools.ItemNames;
 import core.tools.RandomFunction;
 import core.tools.StringUtils;
+import plugin.ai.resource.ResourceAIPManager;
+import plugin.skill.Skills;
+import plugin.skill.construction.HouseLocation;
 import plugin.skill.herblore.PotionDecantingPlugin;
+import plugin.skill.smithing.smelting.Bar;
+import plugin.skill.summoning.pet.Pets;
+import plugin.tutorial.TutorialSession;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Executors;
 
@@ -146,8 +146,6 @@ public final class DeveloperCommandPlugin extends CommandPlugin {
                     for (int i = 0; i < ItemDefinition.getDefinitions().size(); i++) {
                         ItemDefinition definition = ItemDefinition.forId(i);
                         itemName = itemName.toLowerCase();
-                        if (definition == null)
-                            continue;
                         String output = definition.getName().toLowerCase();
                         int itemId = definition.getId();
                         if (output.contains(itemName)) {
@@ -185,15 +183,6 @@ public final class DeveloperCommandPlugin extends CommandPlugin {
                         return true;
                     }
                 });
-                break;
-            case "drops":
-                try {
-                    new NPCDropSQLHandler().parse();
-                    player.sendMessage(EconomyManagement.getModificationRate() + "");
-                } catch (SQLException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
                 break;
             case "stask":
                 player.getSkillTasks().getNewTask(player, Difficulty.NOVICE);
@@ -425,19 +414,12 @@ public final class DeveloperCommandPlugin extends CommandPlugin {
                 int itemAmount = Integer.parseInt(args[1]);
                 player.sendMessage("There are " + ItemLimitation.getAmountLeft(itemAmount) + " left.");
                 return true;
-            case "iparse":
-                try {
-                    new ItemConfigSQLHandler().parse();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                break;
             case "l":
                 player.sendMessage("" + player.getSavedData().getGlobalData().getLowAlchemyCharges());
                 //player.getSavedData().getGlobalData().setLowAlchemyCharges(2);
                 break;
             case "o":
-                     String[] stock = {"Bronze arrow", "Iron arrow", "Steel arrow", "Mithril arrow", "Adamant arrow", "Bronze bolts", "Iron bolts", "Steel bolts", "Shortbow", "Oak shortbow", "Willow shortbow", "Maple shortbow", "Yew shortbow", "Magic shortbow", "Crossbow", "Iron crossbow", "Steel crossbow", "Mith crossbow", "Adamant crossbow", "Rune crossbow", "Green dragonhide set", "Blue dragonhide set", "Red dragonhide set", "Black dragonhide set", "Leather vambraces", "Leather chaps", "Leather body", "Leather body", "Hardleather body", "Leather cowl", "Studded body", "Studded chaps", "Snakeskin boots", "Archer helm", "Amulet of accuracy", "Dorgeshuun c'bow", "Bone bolts", "Iron knife", "Rune knife"};
+                String[] stock = {"Bronze arrow", "Iron arrow", "Steel arrow", "Mithril arrow", "Adamant arrow", "Bronze bolts", "Iron bolts", "Steel bolts", "Shortbow", "Oak shortbow", "Willow shortbow", "Maple shortbow", "Yew shortbow", "Magic shortbow", "Crossbow", "Iron crossbow", "Steel crossbow", "Mith crossbow", "Adamant crossbow", "Rune crossbow", "Green dragonhide set", "Blue dragonhide set", "Red dragonhide set", "Black dragonhide set", "Leather vambraces", "Leather chaps", "Leather body", "Leather body", "Hardleather body", "Leather cowl", "Studded body", "Studded chaps", "Snakeskin boots", "Archer helm", "Amulet of accuracy", "Dorgeshuun c'bow", "Bone bolts", "Iron knife", "Rune knife"};
                 String output = "";
                 for (String string : stock) {
                     for (int i = 0; i < Cache.getItemDefinitionsSize(); i++) {
@@ -650,6 +632,7 @@ public final class DeveloperCommandPlugin extends CommandPlugin {
                 player.getSlayer().setSlayerPoints(toInteger(args[1]));
                 player.debug("Set slayer points to " + args[1]);
                 break;
+
             }
         return false;
     }

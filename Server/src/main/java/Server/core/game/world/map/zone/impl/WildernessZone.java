@@ -1,6 +1,7 @@
 package core.game.world.map.zone.impl;
 
 import core.game.component.Component;
+import core.game.system.config.NPCConfigParser;
 import plugin.ame.AntiMacroNPC;
 import plugin.skill.summoning.familiar.Familiar;
 import core.game.interaction.Option;
@@ -14,7 +15,6 @@ import core.game.node.entity.player.Player;
 import core.game.node.entity.player.info.Rights;
 import core.game.node.item.GroundItemManager;
 import core.game.node.item.Item;
-import core.game.system.mysql.impl.NPCConfigSQLHandler;
 import core.game.world.GameWorld;
 import core.game.world.map.Location;
 import core.game.world.map.zone.MapZone;
@@ -82,51 +82,54 @@ public final class WildernessZone extends MapZone {
 	 */
 	@Override
 	public boolean death(Entity e, Entity killer) {
-		if(e instanceof UriNPC){
-			e.finalizeDeath(killer);
-		}
-		if(e instanceof NPC && killer instanceof Player && (e.asNpc().getName().contains("Revenant") || e.asNpc().getName().equals("Chaos elemental"))){
-			int combatLevel = e.asNpc().getDefinition().getCombatLevel();
-			int dropRate = getNewDropRate(combatLevel);
-			for(int i = 0; i < PVP_GEAR.length; i++){
-				boolean chance = RandomFunction.random(dropRate) == dropRate / 2;
-				if(chance){
-					Item reward;
-					if(PVP_GEAR[i] == 13879 || PVP_GEAR[i] == 13883){ // checks if it's a javelin or throwing axe
-						reward = new Item(PVP_GEAR[i],RandomFunction.random(15,50));
-					} else {
-						reward = new Item(PVP_GEAR[i]);
+		try {
+			if (e instanceof UriNPC) {
+				e.finalizeDeath(killer);
+			}
+			if (e instanceof NPC && killer instanceof Player && (e.asNpc().getName().contains("Revenant") || e.asNpc().getName().equals("Chaos elemental"))) {
+				int combatLevel = e.asNpc().getDefinition().getCombatLevel();
+				int dropRate = getNewDropRate(combatLevel);
+				for (int i = 0; i < PVP_GEAR.length; i++) {
+					boolean chance = RandomFunction.random(dropRate) == dropRate / 2;
+					if (chance) {
+						Item reward;
+						if (PVP_GEAR[i] == 13879 || PVP_GEAR[i] == 13883) { // checks if it's a javelin or throwing axe
+							reward = new Item(PVP_GEAR[i], RandomFunction.random(15, 50));
+						} else {
+							reward = new Item(PVP_GEAR[i]);
+						}
+						Repository.sendNews(killer.asPlayer().getUsername() + " has received a " + reward.getName() + " from a " + e.asNpc().getName() + "!");
+						GroundItemManager.create(reward, ((NPC) e).getDropLocation(), killer.asPlayer());
+						return true;
 					}
-					Repository.sendNews(killer.asPlayer().getUsername() + " has received a " + reward.getName() + " from a " + e.asNpc().getName() + "!");
-					GroundItemManager.create(reward,((NPC) e).getDropLocation(),killer.asPlayer());
-					return true;
 				}
 			}
-		}
-		if (killer.isPlayer()) {
-			if (e instanceof NPC) {
-				boolean gloveDrop = RandomFunction.random(1,100) == 54;
-				if(gloveDrop){
-					byte glove = (byte) RandomFunction.random(1,13);
-					Item reward = new Item(BrawlingGloves.forIndicator(glove).getId());
-					GroundItemManager.create(reward,e.asNpc().getDropLocation(),killer.asPlayer());
-					Repository.sendNews(killer.getUsername() + " has received " + reward.getName().toLowerCase() + " from a " + e.asNpc().getName() +"!");
+			if (killer.isPlayer()) {
+				if (e instanceof NPC) {
+					boolean gloveDrop = RandomFunction.random(1, 100) == 54;
+					if (gloveDrop) {
+						byte glove = (byte) RandomFunction.random(1, 13);
+						Item reward = new Item(BrawlingGloves.forIndicator(glove).getId());
+						GroundItemManager.create(reward, e.asNpc().getDropLocation(), killer.asPlayer());
+						Repository.sendNews(killer.getUsername() + " has received " + reward.getName().toLowerCase() + " from a " + e.asNpc().getName() + "!");
+					}
+					e.asNpc().getDefinition().getDropTables().drop(e.asNpc(), killer);
+					if (((NPC) e).getTask() != null && killer instanceof Player && ((Player) killer).getSlayer().getTask() == e.asNpc().getTask()) {
+						((Player) killer).getSlayer().finalizeDeath(killer.asPlayer(), e.asNpc());
+					}
 				}
-				e.asNpc().getDefinition().getDropTables().drop(e.asNpc(),killer);
-				if (((NPC) e).getTask() != null && killer instanceof Player && ((Player) killer).getSlayer().getTask() == e.asNpc().getTask()) {
-					((Player) killer).getSlayer().finalizeDeath(killer.asPlayer(), e.asNpc());
+
+			}
+
+			if (e instanceof NPC || e instanceof AntiMacroNPC) {
+				e.asNpc().setRespawnTick(GameWorld.getTicks() + e.asNpc().getDefinition().getConfiguration(NPCConfigParser.RESPAWN_DELAY, 17));
+				if (!e.asNpc().isRespawn()) {
+					e.asNpc().clear();
 				}
 			}
-			
+		} catch (Exception f){
+			System.out.println("Unhandled NPC death in wilderness:  " + e.getId());
 		}
-		
-		if (e instanceof NPC || e instanceof AntiMacroNPC) {
-			e.asNpc().setRespawnTick(GameWorld.getTicks() + e.asNpc().getDefinition().getConfiguration(NPCConfigSQLHandler.RESPAWN_DELAY, 17));
-			if (!e.asNpc().isRespawn()) {
-				e.asNpc().clear();
-			}
-		}
-		
 		return true;
 	}
 
@@ -154,7 +157,9 @@ public final class WildernessZone extends MapZone {
 	public boolean enter(Entity e) {
 		if (e instanceof Player) {
 			Player p = (Player) e;
-			show(p);
+			if(!p.isArtificial()) {
+				show(p);
+			}
 			p.getAntiMacroHandler().isDisabled = true;
 			for (int i = 0; i < 7; i++) {
 				if (i == 5 || i == 3) {
@@ -279,7 +284,7 @@ public final class WildernessZone extends MapZone {
 
 	@Override
 	public void locationUpdate(Entity e, Location last) {
-		if (e instanceof Player) {
+		if (e instanceof Player && !e.asPlayer().isArtificial()) {
 			Player p = (Player) e;
 			p.getSkullManager().setLevel(getWilderness(p));
 			Component overlay = p.getInterfaceManager().getOverlay();

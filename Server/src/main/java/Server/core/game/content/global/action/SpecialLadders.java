@@ -10,8 +10,17 @@ public enum SpecialLadders {
     GEM_MINE_UP(new Location(2838,9388,0), new Location(2820, 2996, 0)),
     BEAR_CAGE_UP(Location.create(3230, 9904, 0),Location.create(3231, 3504, 0)),
     BEAR_CAGE_DOWN(Location.create(3230,3508,0),Location.create(3229, 9904, 0)),
-    GLARIAL_EXIT(Location.create(2556,9844,0),Location.create(2557,3444,0));
+    GLARIAL_EXIT(Location.create(2556,9844,0),Location.create(2557,3444,0)),
+    SWENSEN_DOWN(Location.create(2644, 3657, 0), Location.create(2631, 10006, 0)),
+    SWENSEN_UP(Location.create(2665, 10037, 0),Location.create(2649, 3661, 0)),
+    FOG_ENTER(Location.create(3240,3575,0),Location.create(1675,5599,0)),
+    INTRO_LEAVE(Location.create(2522, 4999, 0),Location.create(3230, 3240, 0)),
 
+
+    DRAYNOR_SEWER_SOUTHEAST_DOWN(new Location(3118, 3244, 0), new Location(3118, 9643, 0)),
+    DRAYNOR_SEWER_SOUTHEAST_UP(new Location(3118, 9643, 0), new Location(3118, 3243, 0)),
+    DRAYNOR_SEWER_NORTHWEST_DOWN(new Location(3084, 3272, 0), new Location(3085, 9672, 0)),
+    DRAYNOR_SEWER_NORTHWEST_UP(new Location(3084, 9672, 0), new Location(3084, 3271, 0));
 
     public static HashMap<Location,Location> ladderMap = new HashMap<>();
     static {

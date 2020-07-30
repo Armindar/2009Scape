@@ -59,6 +59,9 @@ public final class LoginReadEvent extends IoReadEvent {
 			return;
 		}
 		switch (opcode) {
+			case 12:
+				System.out.println("User details event detected");
+				break;
 		case 16: // Reconnect world login
 		case 18: // World login
 			decodeWorld(opcode, session, buffer);
@@ -76,9 +79,10 @@ public final class LoginReadEvent extends IoReadEvent {
 	 * @param buffer The buffer to read from.
 	 */
 	private static void decodeWorld(final int opcode, final IoSession session, ByteBuffer buffer) {
-		buffer.get(); // Memory?
-		buffer.get();// no advertisement = 1
-		buffer.get();// 1
+		byte d = buffer.get(); // Memory?
+		byte e = buffer.get();// no advertisement = 1
+		byte f = buffer.get();// 1
+		System.out.println("d: " + d + " e: " + e + " f:" + f);
 		int windowMode = buffer.get();// Screen size mode
 		int screenWidth = buffer.getShort(); // Screen size Width
 		int screenHeight = buffer.getShort(); // Screen size Height
@@ -92,8 +96,8 @@ public final class LoginReadEvent extends IoReadEvent {
 		for (int i = 0; i < Cache.getIndexes().length; i++) {
 			int crc = Cache.getIndexes()[i] == null ? 0 : Cache.getIndexes()[i].getInformation().getInformationContainer().getCrc();
 			if (crc != buffer.getInt() && crc != 0) {
-				session.write(Response.UPDATED);
-				return;
+				/*session.write(Response.UPDATED);
+				return;*/
 			}
 		}
 		buffer = getRSABlock(buffer);

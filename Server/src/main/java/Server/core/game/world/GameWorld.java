@@ -3,25 +3,22 @@ package core.game.world;
 import core.ServerConstants;
 import core.cache.Cache;
 import core.cache.ServerStore;
-import core.plugin.Plugin;
+import core.cache.def.Definition;
+import core.cache.def.impl.ObjectDefinition;
+import core.game.system.config.ConfigParser;
 import plugin.CorePluginTypes.StartupPlugin;
 import plugin.ge.GrandExchangeDatabase;
-import core.game.node.entity.npc.NPC;
 import core.game.node.entity.npc.drop.RareDropTable;
 import core.game.node.entity.player.Player;
-import core.game.node.object.GameObject;
 import core.game.system.SystemLogger;
 import core.game.system.SystemManager;
 import core.game.system.SystemState;
-import core.game.system.mysql.SQLManager;
 import core.game.system.script.ScriptManager;
 import core.game.system.task.Pulse;
 import core.game.system.task.TaskExecutor;
 import core.game.world.callback.CallbackHub;
-import core.game.world.map.Direction;
 import core.game.world.map.Location;
 import core.game.world.map.RegionManager;
-import core.game.world.map.build.LandscapeParser;
 import core.game.world.repository.DisconnectionQueue;
 import core.game.world.repository.NodeList;
 import core.game.world.repository.Repository;
@@ -64,6 +61,10 @@ public final class GameWorld {
     public static int cores = Runtime.getRuntime().availableProcessors();
 
     public static final List<StartupPlugin> STARTUP_PLUGINS = new ArrayList<>();
+
+    private static final ConfigParser configParser = new ConfigParser();
+
+    public static boolean PCBotsSpawned = false;
 
     /**
      * The game settings to use.
@@ -161,26 +162,32 @@ public final class GameWorld {
         ServerStore.init(ServerConstants.STORE_PATH);
         dbm.connect();
         GrandExchangeDatabase.init();
-        SQLManager.prePlugin();
         ScriptManager.load();
+        configParser.prePlugin();
         PluginManager.init();
+        configParser.postPlugin();
         RareDropTable.init();
         SystemLogger.log("Initialized Rare Drop Table from " + RareDropTable.RDT_LOCATION);
         //ResourceAIPManager.get().init(); Commented out as we do not use Skilling Tasks, which is what this is for
-        //ImmerseWorld.init(); disabled until bots are rewritten to work with the new pulse system
-        SQLManager.postPlugin();
+        if(settings.getEnable_bots()) {
+            ImmerseWorld.init();
+        }
+        SystemLogger.log("Made it to 173");
         CallbackHub.call();
         STARTUP_PLUGINS.forEach(plugin -> {
             if(plugin != null){
                 plugin.run();
             }
         });
+        SystemLogger.log("Made it to 180");
         if (run) {
             SystemManager.flag(GameWorld.getSettings().isDevMode() ? SystemState.PRIVATE : SystemState.ACTIVE);
         }
         System.gc();
+        SystemLogger.log("185");
         FastPulser.init(20);
-        Pulser.init(600);
+        ObjectDefinition.getDefinitions().values().forEach(Definition::getExamine);
+        SystemLogger.log("188");
     }
 
 
@@ -218,7 +225,7 @@ public final class GameWorld {
      */
     public static GameSettings getSettings() {
         if (settings == null) {
-            return (settings = GameSettings.parse("worldprops/server1.xml"));
+            return (settings = GameSettings.Companion.parse("worldprops/server1.xml"));
         }
         return settings;
     }

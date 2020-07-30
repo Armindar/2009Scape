@@ -56,7 +56,7 @@ public class WildernessAreaZone extends MapZone implements Plugin<Object> {
 	@Override
 	public Plugin<Object> newInstance(Object arg) throws Throwable {
 		ZoneBuilder.configure(this);
-		PluginManager.definePlugin(new MandrithDialoguePlugin(), new PilesDialoguePlugin(), new PilesItemHandler(), new RuniteGolemNPC());
+		PluginManager.definePlugins(new MandrithDialoguePlugin(), new PilesDialoguePlugin(), new PilesItemHandler(), new RuniteGolemNPC());
 		return this;
 	}
 
@@ -372,7 +372,7 @@ public class WildernessAreaZone extends MapZone implements Plugin<Object> {
 					final int amount = player.getInventory().getAmount(itemId);
 					final int price = 50 * amount;
 					if (!player.getInventory().contains(995, price)) {
-						player.getDialogueInterpreter().sendDialogues(8663, FacialExpression.OSRS_NORMAL, "I'll need 50 coins per item.");
+						player.getDialogueInterpreter().sendDialogues(8663, FacialExpression.OLD_NORMAL, "I'll need 50 coins per item.");
 						return true;
 					}
 					player.getDialogueInterpreter().sendOptions("Banknote " + amount + " x " + event.getUsedItem().getName()  + "?", "Yes - " + price + " gp", "Cancel");
@@ -385,7 +385,7 @@ public class WildernessAreaZone extends MapZone implements Plugin<Object> {
 					return true;
 				}
 			}
-			player.getDialogueInterpreter().sendDialogues(8663, FacialExpression.OSRS_NORMAL, "Sorry, I wasn't expecting anyone to want to convert", "that sort of item, so I haven't any banknotes for it.");
+			player.getDialogueInterpreter().sendDialogues(8663, FacialExpression.OLD_NORMAL, "Sorry, I wasn't expecting anyone to want to convert", "that sort of item, so I haven't any banknotes for it.");
 			return true;
 		}
 
