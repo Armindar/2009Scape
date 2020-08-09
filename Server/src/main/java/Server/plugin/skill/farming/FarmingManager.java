@@ -75,7 +75,18 @@ public final class FarmingManager implements SavingModule {
 	}
 
 	public void parseWrappers(JSONArray data){
+		for (int i = 0; i < data.size(); i++) {
+			JSONObject wrapperData = (JSONObject) data.get(i);
+			JSONObject cycleData = (JSONObject) wrapperData.get("cycle");
 
+			PatchWrapper wrapper = new PatchWrapper(player, Integer.parseInt(wrapperData.get("wrapperId").toString()));
+			wrapper.getCycle().setCompostThreshold(Integer.parseInt(cycleData.get("compostThreshold").toString()));
+			wrapper.getCycle().setGrowthTime(Long.parseLong(cycleData.get("growthTime").toString()));
+			wrapper.getCycle().setHarvestAmount(Integer.parseInt(cycleData.get("harvestAmount").toString()));
+			wrapper.getCycle().setProtection(Boolean.parseBoolean(cycleData.get("protection").toString()));
+			wrapper.setNode(wrapper.getPatch().getNodes()[Integer.parseInt(wrapperData.get("nodeId").toString())]);
+			patches.add(wrapper);
+		}
 	}
 
 	@Override
