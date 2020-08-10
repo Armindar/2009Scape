@@ -1,0 +1,56 @@
+Index: Client/src/main/java/org/runite/Client.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.runite;\r\n\r\nimport org.runite.jagex.GameShell;\r\n\r\n/**\r\n * Handles the launching of our Game Client.\r\n * @author Keldagrim Development Team\r\n *\r\n */\r\n\r\n/*\r\n\r\nNOTICE: THIS IS THE LIVESERVER CLIENT. For development purposes, use GameLaunch.java instead!!!\r\n\r\n */\r\npublic class Client {\r\n\r\n\tpublic static final String CONF_FILE=\"client.conf\";\r\n\r\n\tpublic static String PUBLIC_IP_ADDRESS;\r\n\r\n\t/**\r\n\t * The game settings.\r\n\t */\r\n\tpublic static GameSetting SETTINGS = new GameSetting(\"2009Scape\", \"192.168.1.180\", 3, \"live\", false);\r\n\t\r\n\t/**\r\n\t * The main method.\r\n\t r @param args the arguments casted on runtime.\r\n     r_game\r\n\r\n\t */\r\n\tpublic static void main(String[]args) {\r\n\t\ttry {\r\n\t\t\tPUBLIC_IP_ADDRESS = \"192.168.1.180\";\r\n\t\t} catch (Exception e){\r\n\t\t\tSystem.out.println(\"Can't find config file \" + CONF_FILE + \" defaulting to IP 127.0.0.1\");\r\n\t\t\tPUBLIC_IP_ADDRESS = \"127.0.0.1\";\r\n\t\t}\r\n\t\tSystem.out.println(\"Running liveserver client\");\r\n\t\tConfigurations.LOCAL_SERVER = false;\r\n\t\tConfigurations.LOCAL_MS = false;\r\n\t\tConfigurations.MS_IP = Configurations.LOCAL_MS ? \"127.0.0.1\" : PUBLIC_IP_ADDRESS; //Needs to be done because of order it's otherwise set\r\n\r\n\t\tfor (int i = 0; i < args.length; i++) {\r\n\t\t\tString[] cmd = args[i].split(\"=\");\r\n\t\t\tswitch (cmd[0]) {\r\n\t\t\tcase \"ip\":\r\n\t\t\t\tSETTINGS.setIp(cmd[1]);\r\n\t\t\t\tbreak;\r\n\t\t\tcase \"world\":\r\n\t\t\t\tSETTINGS.setWorld(Integer.parseInt(cmd[1]));\r\n\t\t\t\tbreak;\r\n\t\t\t}\r\n\t\t}\r\n\t\t/**\r\n\t\t * Launches the client\r\n\t\t */\r\n\t\tGameShell.launchDesktop();\r\n\t}\r\n\t\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Client/src/main/java/org/runite/Client.java	(revision 49e954e2c938427a2bac8cf9610ccfc0219251ee)
++++ Client/src/main/java/org/runite/Client.java	(date 1596121671170)
+@@ -22,7 +22,7 @@
+ 	/**
+ 	 * The game settings.
+ 	 */
+-	public static GameSetting SETTINGS = new GameSetting("2009Scape", "192.168.1.180", 3, "live", false);
++	public static GameSetting SETTINGS = new GameSetting("AliceWonderland", "alicewonderland.ddns.net", 1, "live", false);
+ 	
+ 	/**
+ 	 * The main method.
+@@ -32,7 +32,7 @@
+ 	 */
+ 	public static void main(String[]args) {
+ 		try {
+-			PUBLIC_IP_ADDRESS = "192.168.1.180";
++			PUBLIC_IP_ADDRESS = "alicewonderland.ddns.net";
+ 		} catch (Exception e){
+ 			System.out.println("Can't find config file " + CONF_FILE + " defaulting to IP 127.0.0.1");
+ 			PUBLIC_IP_ADDRESS = "127.0.0.1";
+@@ -40,7 +40,7 @@
+ 		System.out.println("Running liveserver client");
+ 		Configurations.LOCAL_SERVER = false;
+ 		Configurations.LOCAL_MS = false;
+-		Configurations.MS_IP = Configurations.LOCAL_MS ? "127.0.0.1" : PUBLIC_IP_ADDRESS; //Needs to be done because of order it's otherwise set
++		Configurations.MS_IP = Configurations.LOCAL_MS ? "alicewonderland.ddns.net" : PUBLIC_IP_ADDRESS; //Needs to be done because of order it's otherwise set
+ 
+ 		for (int i = 0; i < args.length; i++) {
+ 			String[] cmd = args[i].split("=");
+Index: Client/src/main/java/org/runite/Configurations.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.runite;\r\nimport java.io.File;\r\nimport java.math.BigInteger;\r\n\r\n/**\r\n * A class with configurations stored.\r\n * @author Emperor\r\n * \r\n */\r\npublic final class Configurations {\r\n\t\r\n\t/**\r\n\t * The website.\r\n\t */\r\n\tpublic static final String WEBSITE = \"http://www.os.frostblades.org\";\r\n\t\r\n\t/**\r\n\t * The client build.\r\n\t */\r\n\tpublic static final int CLIENT_BUILD = 530;\r\n\r\n\t/**\r\n\t * The sub build.\r\n\t */\r\n\tpublic static final int SUB_BUILD = 1;\r\n\t\r\n\t/**\r\n\t * If the client is local.\r\n\t */\r\n\tpublic static boolean LOCAL_MS = true;\r\n\tpublic static boolean LOCAL_SERVER = true;\r\n\r\n\t/**\r\n\t * Packaging.\r\n\t */\r\n\tpublic static final String PACKAGE_JAGEX = \"org.runite.jagex\";\r\n\t\r\n\t/**\r\n\t * The login theme song.\r\n\t */\r\n\tpublic static final String LOGIN_THEME_SONG = \"scape main\";\r\n\t\r\n\t/**\r\n\t * The cache name.\r\n\t */\r\n\tpublic static final String CACHE_NAME = File.separator + \".runite_\" + CLIENT_BUILD;\r\n\t\r\n\t/**\r\n\t * The RSA modulus.\r\n\t */\r\n\tpublic static final BigInteger MODULUS = new BigInteger(\"119365899446067315932975991898363325061579719991294025359328021960040125142258621067848949689980866028232491082585431814345859060363748342297790362002830405818586025541018815563000741957417375211440504983329981059065255756529758598479962175681326119784430342275130902058984323109363665114655494006708620299283\");\r\n\r\n\t/**\r\n\t * The RSA exponent.\r\n\t */\r\n\tpublic static final BigInteger PUBLIC_EXPONENT = new BigInteger(\"65537\");\r\n\r\n\t/**\r\n\t * If the walk packet should be send when doing eg. object actions.\r\n\t */\r\n\tpublic static final boolean ENABLE_WALK_AID = false;\r\n\t\r\n\t/**\r\n\t * The MS IP.\r\n\t */\r\n\tpublic static String MS_IP = Configurations.LOCAL_MS ? \"127.0.0.1\" : Client.PUBLIC_IP_ADDRESS;\r\n\r\n\t/**\r\n\t * The operation system name.\r\n\t */\r\n\tpublic static final String OS_NAME = System.getProperty(\"os.name\").toUpperCase();\r\n\t\r\n\t/**\r\n\t * IF RSA is enabled.\r\n\t */\r\n\tpublic static final boolean USE_RSA = false;\r\n\r\n\t/**\r\n\t * IF we use ISAAC cipher.\r\n\t */\r\n\tpublic static final boolean USEISAAC = false;\r\n\t\r\n\t/**\r\n\t * The cache path.\r\n\t * @return the path.\r\n\t */\r\n\tpublic static String getCachePath() { \r\n\t\tfinal String OS = System.getProperty(\"os.name\").toUpperCase();\r\n\t\tif (OS.contains(\"WIN\")) {\r\n\t\t\treturn new StringBuilder(System.getProperty(\"user.home\") + CACHE_NAME).toString();\r\n\t\t} else if (OS.contains(\"MAC\")) {\r\n\t\t\treturn new StringBuilder(System.getProperty(\"user.home\") + CACHE_NAME).toString();\r\n\t\t} else if (OS.contains(\"NUX\")) {\r\n\t\t\treturn System.getProperty(\"user.home\") + CACHE_NAME;\r\n\t\t}\r\n\t\treturn new StringBuilder(System.getProperty(\"user.dir\")).toString() + CACHE_NAME;\r\n\t}\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Client/src/main/java/org/runite/Configurations.java	(revision 49e954e2c938427a2bac8cf9610ccfc0219251ee)
++++ Client/src/main/java/org/runite/Configurations.java	(date 1596121680313)
+@@ -27,8 +27,8 @@
+ 	/**
+ 	 * If the client is local.
+ 	 */
+-	public static boolean LOCAL_MS = true;
+-	public static boolean LOCAL_SERVER = true;
++	public static boolean LOCAL_MS = false;
++	public static boolean LOCAL_SERVER = false;
+ 
+ 	/**
+ 	 * Packaging.
